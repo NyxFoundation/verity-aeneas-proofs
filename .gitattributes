@@ -1,0 +1,2 @@
+# Preserve Aeneas output byte-for-byte, including its terminal blank line.
+generated/** -whitespace

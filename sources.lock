@@ -1,0 +1,22 @@
+format_version = 1
+
+[correspondence]
+verity_repository = "https://github.com/NyxFoundation/verity.git"
+verity_revision = "a9f3365151a28784277ef31b89aa0092656d4f88"
+formal_leanspec_repository = "https://github.com/NyxFoundation/formal-leanSpec.git"
+formal_leanspec_revision = "ba7284513031eac5c66bfb8221d27b6154cf240b"
+
+[tools]
+cargo_hax_version = "0.4.0"
+charon_version = "nightly-2026.09.02"
+aeneas_version = "nightly-2026.09.03-6852e64"
+lean_toolchain = "leanprover/lean4:v4.31.0"
+
+[survey]
+verity_revision = "dff96ac79cffba11472d3d9ff8e9d8bd39491584"
+leanspec_repository = "https://github.com/leanEthereum/leanSpec.git"
+leanspec_revision = "08e1481a662e30d5614e1eb736ec2ae9148aac52"
+
+[provenance]
+verity_pull_requests = [49, 56]
+latest_verity_commit = "fec33e8cfc7232971fd6f692ef8ae659ad5190e6"
