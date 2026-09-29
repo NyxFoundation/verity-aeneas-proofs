@@ -58,7 +58,9 @@ A full temporary extraction added `--start-from verity_chain::state_transition` 
 1. `process_attestations`' deduplication closure at `state_transition/attestations.rs:55:13-55:44`: `Can't end abstraction 4 as it is set as non-endable`.
 2. `JustificationState::unpack` at `state_transition/attestations.rs:102:4-124:5`: `Internal error, please file an issue`.
 
-The result contained two `sorry` bodies. With the generated external templates installed in an isolated copy, `lake build VerityChain.Funs` also failed because Aeneas emitted methods (`count`, `zip`, `map`, `filter`, `skip`, `collect`, `all`, and `any`) that are not fields of the pinned Lean backend's `Iterator` model, together with array-`Eq` and mutable-closure shape errors. Consequently the full output is not a sound import candidate even if the two `sorry`s were tolerated.
+The result contained two `sorry` bodies. With the generated external templates installed in an isolated copy, `lake build VerityChain.Funs` also failed because Aeneas emitted methods (`count`, `zip`, `map`, `filter`, `skip`, `collect`, `all`, and `any`) that are not fields of the pinned Lean backend's `Iterator` model, together with array-`Eq` and mutable-closure shape errors. Consequently the full output is not a sound import candidate even if the two `sorry`s were tolerated. Its temporary `Funs.lean` hash was `bf791af8e20999d481fcdd5d6241c42641bbdc3b7a3248fd1f6817fa0befd06e`.
+
+All extraction and isolated-build output was written below `/tmp`; no generated or external-model file in this repository was changed. The full probe used the checked-in Charon command plus `--start-from verity_chain::state_transition`, followed by the checked-in Aeneas flags.
 
 A second temporary extraction selected only `generate_genesis`, `process_slots`, `process_block_header`, `process_block`, and `state_transition`, while marking `process_attestations` opaque. It produced zero `sorry` bodies and an isolated `lake build VerityChain.Funs` passed, but its external template necessarily contained:
 
