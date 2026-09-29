@@ -109,4 +109,8 @@ def verity_types.config.MILLISECONDS_PER_SLOT : RustM Std.U64 := ok 4000#u64
 
 def verity_types.config.MILLISECONDS_PER_INTERVAL : RustM Std.U64 := ok 800#u64
 
+def verity_types.config.GOSSIP_DISPARITY_INTERVALS : RustM Std.U64 := ok 1#u64
+
 def verity_types.config.HISTORICAL_ROOTS_LIMIT : RustM Std.Usize := ok 262144#usize
+
+def verity_types.config.MAX_ATTESTATIONS_DATA : RustM Std.U8 := ok 8#u8

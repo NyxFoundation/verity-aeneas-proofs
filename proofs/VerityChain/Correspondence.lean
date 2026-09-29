@@ -496,6 +496,20 @@ theorem historicalRootsLimit_corresponds :
   norm_num [verity_types.config.HISTORICAL_ROOTS_LIMIT,
     LeanSpec.Forks.Lstar.HISTORICAL_ROOTS_LIMIT]
 
+/-- The transcribed attestation-data cap equals formal-leanSpec's value. -/
+theorem maxAttestationsData_corresponds :
+    verity_types.config.MAX_ATTESTATIONS_DATA = ok 8#u8 ∧
+      (8#u8).val = LeanSpec.Forks.Lstar.MAX_ATTESTATIONS_DATA := by
+  norm_num [verity_types.config.MAX_ATTESTATIONS_DATA,
+    LeanSpec.Forks.Lstar.MAX_ATTESTATIONS_DATA]
+
+/-- The transcribed gossip-disparity interval equals formal-leanSpec's value. -/
+theorem gossipDisparityIntervals_corresponds :
+    verity_types.config.GOSSIP_DISPARITY_INTERVALS = ok 1#u64 ∧
+      (1#u64).val = LeanSpec.Forks.Lstar.GOSSIP_DISPARITY_INTERVALS := by
+  norm_num [verity_types.config.GOSSIP_DISPARITY_INTERVALS,
+    LeanSpec.Forks.Lstar.GOSSIP_DISPARITY_INTERVALS]
+
 /-- Verity's three available slot-duration literals satisfy
     `milliseconds-per-slot = intervals-per-slot * milliseconds-per-interval`. -/
 theorem millisecondsConfig_arithmetic :

@@ -31,7 +31,7 @@ The proofs compare the checked-in `VerityChain` Aeneas extraction of Verity
 | Justification index | `justifiedIndexAfter_eq` | Exact extracted `Option Usize` result for every input |
 | CONT index transport | `justifiedIndexAfter_corresponds`, `justifiedIndexAfter_refines` | Converted result equals `Slot.justifiedIndexAfter` when the index fits Aeneas's platform `usize` |
 | Slot clock | `intervalsAtSlotStart_eq`, `intervalsAtSlotStart_corresponds`, `intervalsAtSlotStart_refines` | Checked multiplication and `Interval.fromSlot` agree when the `u64` product does not overflow |
-| Configuration | `intervalsPerSlot_corresponds`, `historicalRootsLimit_corresponds` | Extracted values equal formal-leanSpec's `5` and `2^18` |
+| Configuration | `intervalsPerSlot_corresponds`, `historicalRootsLimit_corresponds`, `maxAttestationsData_corresponds`, `gossipDisparityIntervals_corresponds` | Extracted/transcribed pinned-source values equal formal-leanSpec's `5`, `2^18`, `8`, and `1` |
 | Configuration arithmetic | `millisecondsConfig_arithmetic` | `4000 = 5 * 800` for the three extracted slot-duration literals |
 
 `lake build VerityChain` passes. `#print axioms` was run for every public theorem in
@@ -48,12 +48,11 @@ The proofs compare the checked-in `VerityChain` Aeneas extraction of Verity
 - `intervalsAtSlotStart_corresponds` requires the product to fit `u64`. Verity uses checked
   Rust multiplication, while formal-leanSpec constructs a wrapping `UInt64`; claiming equality
   after extracted overflow would be false.
-- `INTERVALS_PER_SLOT`, `MILLISECONDS_PER_SLOT`, `MILLISECONDS_PER_INTERVAL`, and
-  `HISTORICAL_ROOTS_LIMIT` enter `VerityChain.FunsExternal` as definitions transcribed from the
-  pinned `verity-types` literals. The proofs check those definitions but do not independently
-  authenticate that transcription.
-- `MAX_ATTESTATIONS_DATA` and `GOSSIP_DISPARITY_INTERVALS` are not dependencies in the fixed
-  `VerityChain` extraction, so no implementation correspondence theorem is claimed for them.
+- `INTERVALS_PER_SLOT`, `MILLISECONDS_PER_SLOT`, `MILLISECONDS_PER_INTERVAL`,
+  `HISTORICAL_ROOTS_LIMIT`, `MAX_ATTESTATIONS_DATA`, and `GOSSIP_DISPARITY_INTERVALS` enter
+  `VerityChain.FunsExternal` as definitions transcribed from the pinned `verity-types` literals.
+  The proofs check those stable source definitions but do not independently authenticate the
+  transcription; the latter two constants are absent from the fixed generated dependency set.
 - Of the requested container shapes, the fixed extraction exposes `Checkpoint` directly.
   Attestation and aggregation containers are absent from `generated/VerityChain/Types.lean`, so
   no theorem is manufactured for unavailable generated types.
