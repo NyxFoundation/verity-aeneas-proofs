@@ -1,0 +1,1 @@
+../../generated/VerityChain/TypesExternal_Template.lean
