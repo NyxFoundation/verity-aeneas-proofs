@@ -89,6 +89,34 @@ theorem attestGate_no_double_vote_after
   attestGate_rejects_remembered state' slot
     (attestGate_records_fired state state' slot h)
 
+/-- Finite-width version of the attested-slot state, used to expose Rust's
+release-mode `u64` wraparound boundary. -/
+structure AttestedStateU64 where
+  slots : Finset UInt64
+  deriving DecidableEq
+
+/-- Exact release-mode arithmetic of the pinned retain closure. -/
+def pruneAttestedU64 (slot : UInt64) (slots : Finset UInt64) : Finset UInt64 :=
+  slots.filter fun attested => slot < attested + UInt64.ofNat 4
+
+/-- Exact finite-width duplicate gate around `pruneAttestedU64`. -/
+def attestGateU64 (state : AttestedStateU64) (slot : UInt64) :
+    AttestedStateU64 × Bool :=
+  if slot ∈ state.slots then
+    (state, false)
+  else
+    ({ slots := pruneAttestedU64 slot (insert slot state.slots) }, true)
+
+/-- Boundary counterexample for an unconditional VAL-4 claim: at `u64::MAX`,
+the release-mode retention addition wraps, immediately forgets the fired slot,
+and lets the next identical duty through. Debug overflow checks panic instead. -/
+theorem attestGate_wraparound_counterexample :
+    let max := UInt64.ofNat 18446744073709551615
+    let first := attestGateU64 ⟨∅⟩ max
+    first.2 = true ∧ max ∉ first.1.slots ∧
+      (attestGateU64 first.1 max).2 = true := by
+  decide
+
 /-- The state bit used by Verity's lag/hysteresis duty gate. -/
 structure LagGate where
   closed : Bool

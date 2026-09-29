@@ -28,7 +28,7 @@ modeled as pure functions.
 | Item | Classification | Checked evidence | Boundary |
 |---|---|---|---|
 | VAL-2 | **Pure gate proved; end-to-end correspondence blocked** | `declaredRoleGate_isSome_iff`, `declaredRoleGate_distinct` prove the exact equality branch at `keystore.rs:130` accepts only distinct decoded public keys. | `load` also performs YAML/filesystem reads, hex decoding, public-key parsing, and opaque secret-key decoding. No theorem identifies the model with an extracted Rust function. |
-| VAL-4 | **Safety proved for the source-faithful non-overflowing gate model; direct extraction blocked** | `attestGate_rejects_remembered`, `attestGate_records_fired`, and `attestGate_no_double_vote_after` model `duties.rs:287-294`: contains, insert-before-effects, then retain. | Rust uses `u64` addition in the retain closure; the model is the exact arithmetic path while `slot + 4` does not overflow. The enclosing function is async and absent from usable extraction. |
+| VAL-4 | **Non-overflowing safety proved; unconditional claim diverges at the `u64` boundary** | `attestGate_rejects_remembered`, `attestGate_records_fired`, and `attestGate_no_double_vote_after` model `duties.rs:287-294`: contains, insert-before-effects, then retain. `attestGate_wraparound_counterexample` checks that release-mode arithmetic fires twice at `u64::MAX`. | Rust's `attested + 4` wraps in release mode and immediately removes the just-inserted maximum slot; debug overflow checks panic. The enclosing async function remains absent from usable extraction. |
 | VAL-5 | **Blocked** | The wrapper bodies call leanSig's `get_prepared_interval` and `advance_preparation`, but the generated template declares both as axioms. The formal theorem therefore cannot be transferred without assuming the desired external semantics. | The pinned key extraction is partial and reports the `key.SecretKey` type/constructor name clash; even after that, leanSig methods require verified external models. |
 | SYNC-1 | **Stuttering refinement proved; unconditional `transition_sound` correspondence refuted** | `observe_stutter_or_transition` proves every result is either unchanged or a formal permitted transition. `observe_initial_ne_synced` proves no idle-to-synced shortcut. | `syncing_stutter_counterexample` and `synced_stutter_counterexample` show Verity returns active-state self transitions, while formal `canTransitionTo` has neither self edge. |
 | SYNC-2 | **Semantic divergence** | `gossipGate_idle_counterexample` proves the idle witness: the source-faithful model attempts forwarding, while formal `acceptsGossip idle = false`. | `network.rs:119` routes every `NetworkEvent::Gossip` to `forward`; `network.rs:162` has no sync-state input. Queue saturation may drop independently, but there is no sync gate. |
@@ -44,8 +44,9 @@ network-stall override. The pure transcription proves both directions of disagre
 - `dutyGate_denies_synced_counterexample`: `(9, 0, 9)` is denied by Verity from an open gate,
   while formal `attestationDue` is true for interval 1, an empty history, and `synced = true`.
 
-This divergence does not invalidate VAL-4's duplicate-slot safety property; it invalidates an
-equality claim between the two systems' complete duty predicates.
+This duty-scheduling divergence is independent of VAL-4's duplicate-slot gate. The gate is safe
+on the non-overflowing domain, but `attestGate_wraparound_counterexample` separately shows that
+its unconditional catalog form fails at `u64::MAX` in release-mode arithmetic.
 
 ## SYNC-1 edge accounting
 
@@ -117,10 +118,10 @@ systemd-run --user --scope -p MemoryMax=16G "$CHARON" cargo --preset=aeneas \
 
 ```sh
 lake build VerityChain.ValidatorSync
-lake env lean /tmp/validator-sync-axioms.lean
+lake env lean proofs/AxiomAudit.lean
 ```
 
-The second file imports `VerityChain.ValidatorSync` and runs `#print axioms` for all theorem
-names in the classification table. The concrete `decide` counterexamples report no axioms;
-the remaining proofs report only Lean's foundational `propext` and, for `Finset`, `Quot.sound`.
+The audit imports `VerityChain.ValidatorSync` and runs `#print axioms` for every public theorem.
+Counterexamples without finite sets report no axioms; `Finset` proofs, including the wraparound
+witness, report only `propext` and `Quot.sound`.
 None reports `sorryAx` or a domain-specific axiom.
