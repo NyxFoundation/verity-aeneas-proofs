@@ -6,13 +6,15 @@ This repository owns verification artifacts, not production consensus code. It w
 
 ## Current result
 
-The first completed vertical slice is formal-leanSpec proposition **CONT-2**. For Verity's extracted `is_justifiable_after` predicate, the proofs establish that:
+The correspondence ledger classifies every surveyed Verity/formal-leanSpec boundary and all 34 theorem propositions in the formal catalog. Checked Lean results cover:
 
-- at or after finalization, the extracted `RustM Bool` equals formal-leanSpec's `Slot.isJustifiableAfter`;
-- it succeeds with `true` exactly when the slot distance is at most 5, a perfect square, or a pronic number;
-- before finalization, it succeeds with `false`.
+- SSZ ranges, byte lengths, hash delegation, and error refinement;
+- checkpoint ordering/advancement, justification, proposer selection, slot-clock, and configuration arithmetic;
+- fork-choice candidate eligibility and vote replacement, including a strict/non-strict counterexample;
+- response codes, varint size, networking constants, and compressed-bound counterexamples;
+- validator safety gates and sync-state refinement, with checked boundary divergences.
 
-The correspondence uses a handwritten model of Rust's `u128::isqrt` backed by formal-leanSpec's proved square root. It does not prove the whole client or protocol safety.
+State transition, full fork choice/storage, async networking, and external crypto remain limited by the concrete extraction or contract boundaries recorded in [`docs/correspondence-survey.md`](docs/correspondence-survey.md). These results do not prove the whole client or protocol safety.
 
 ## Repository layout
 
@@ -37,7 +39,7 @@ git diff --exit-code -- generated artifacts.sha256
 ./scripts/verify.sh
 ```
 
-`extract.sh` checks out the exact Verity revision from `sources.lock`, installs the pinned Charon and Aeneas binaries through cargo-hax, and replaces only `generated/`. `verify.sh` checks artifact integrity, builds the Lean package, and prints the axioms used by the three CONT-2 theorems.
+`extract.sh` checks out the exact Verity revision from `sources.lock`, installs the pinned Charon and Aeneas binaries through cargo-hax, and replaces only `generated/`. `verify.sh` checks artifact integrity, rejects handwritten `sorry`/`admit`, builds every Lean target, verifies that every public correspondence theorem is listed in the axiom audit, and prints those dependencies.
 
 GitHub Actions intentionally runs only the lightweight artifact-integrity check. Lean and Aeneas execution remains an explicit local operation because of its resource cost.
 
