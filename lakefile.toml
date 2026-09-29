@@ -1,9 +1,13 @@
 name = "VerityAeneasProofs"
 version = "0.1.0"
-defaultTargets = ["VerityChain"]
+defaultTargets = ["VerityChain", "VerityP2P"]
 
 [[lean_lib]]
 name = "VerityChain"
+srcDir = "lean"
+
+[[lean_lib]]
+name = "VerityP2P"
 srcDir = "lean"
 
 [[require]]

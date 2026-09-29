@@ -1,0 +1,1 @@
+../../proofs/VerityChain/ValidatorSync.lean
