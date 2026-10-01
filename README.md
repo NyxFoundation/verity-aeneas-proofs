@@ -82,6 +82,15 @@ flowchart TB
 
 `leanSpec` is the executable protocol reference; `formal-leanSpec` expresses that protocol as Lean definitions and theorems. Their alignment is an upstream specification obligation, while Track 1 relates Verity's implementation semantics to the formal model. Track 2 proves contracts and invariants owned by Verity even when no protocol-level counterpart exists. The solid implementation path is the checked-in Charon/Aeneas translation; the dotted path denotes an explicit source-faithful model rather than an extracted function.
 
+## Proposition inventory
+
+The 75 audited public Lean theorems are grouped by semantic obligation rather than forced into a one-to-one mapping with formal-leanSpec's catalog.
+
+- **Correspondence propositions:** representation and SSZ bridges; justification, proposer, checkpoint, slot-clock, and configuration correspondence; error refinement; fork-choice relations; validator and sync differences; response-code, varint, networking-constant, and compressed-bound correspondence.
+- **Verity-specific propositions:** finite-width arithmetic bridges; exact extracted branch behavior; configuration consistency and hash delegation; key-separation and duplicate-vote gates; sync initialization; and response-byte classification.
+
+See the [public proposition inventory](docs/proposition-inventory.md) for each grouped proposition, its formal or Verity obligation, whether it targets Aeneas output or an explicit pure model, and all supporting public theorem names.
+
 ## Repository layout
 
 | Path | Ownership |
