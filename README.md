@@ -71,21 +71,10 @@ mindmap
 
 ### Work priority
 
-```mermaid
-mindmap
-  root((Work priority))
-    active
-      No third-party change required
-      No independent external contract verification required
-      Examples
-        ST-1 / FC-1 / NET-1 / NET-2
-    pending-external
-      Third-party change or independent verification required
-      Whole boundary inherits pending
-        Even when internal work is separable
-      Examples
-        SSZ-1 / VAL-5 / STOR-2
-```
+| Priority | Definition | Application | Examples |
+|---|---|---|---|
+| `active` | No third-party change or independent external contract verification is required. | Continue work in Verity, formal-leanSpec, Charon, Aeneas, or this repository. | ST-1, FC-1, NET-1, NET-2 |
+| `pending-external` | A third-party change or independent external contract verification is required. | The whole boundary is pending, even when its internal work could be separated. | SSZ-1, VAL-5, STOR-2 |
 
 A counterexample can therefore be a successfully checked Lean result while its correspondence
 status is still `divergence`. Likewise, `pending-external` does not replace a technical status;
