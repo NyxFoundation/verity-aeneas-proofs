@@ -18,6 +18,68 @@ State transition, full fork choice/storage, async networking, and external crypt
 
 The same Lean implementation semantics can also support Verity-specific proofs without a formal-leanSpec counterpart. Checked examples include extracted configuration arithmetic and pure-model properties for key-role separation, duplicate-vote prevention within its non-overflowing domain, response-code ranges, and initial sync behavior.
 
+## Proposition status taxonomy
+
+Each surveyed boundary has one technical correspondence status and one independent work-priority
+classification. Child nodes explain why a status applies; examples are representative rather
+than exhaustive. The authoritative per-boundary assignments are in the
+[correspondence survey](docs/inventory/correspondence-survey.md).
+
+### Technical correspondence status
+
+```mermaid
+mindmap
+  root((Technical status))
+    proved
+      Exact equality or transport
+        CONT-1 / CONT-2 / VAL-1 / VAL-3
+    partial
+      Restricted domain or precondition
+        justifiedIndexAfter / slot-clock overflow
+      Weaker valid relation
+        SYNC-1 stuttering refinement
+      Supporting boundary only
+        VAL-2 key gate
+    blocked
+      Extraction or tool limitation
+        ST-1 / FC-1
+      Missing representation or semantic model
+        Store finite-map relation
+      Blocked by another correspondence
+        FC-7 depends on state transition
+      Unverified external contract
+        VAL-5 / STOR-2
+    divergence
+      Different rules
+        SYNC-2 / duty gate / vote precedence
+      Finite-width boundary
+        VAL-4 at u64::MAX
+      Different formula or schema
+        NET-2 compressed bound
+    no-counterpart
+      Delegated outside Verity
+        SSZ-1 / SSZ-5 / SSZ-6
+      Formal proof-only concept
+        AnchorWF / Reachable
+      No named Rust operation
+        Root.lexLe uses array Ord
+      Feature absent or materially different
+        Store.prune
+      Verity-only behavior
+        Timeline / database writers
+```
+
+### Work priority
+
+| Priority | Definition | Application | Examples |
+|---|---|---|---|
+| `active` | No third-party change or independent external contract verification is required. | Continue work in Verity, formal-leanSpec, Charon, Aeneas, or this repository. | ST-1, FC-1, NET-1, NET-2 |
+| `pending-external` | A third-party change or independent external contract verification is required. | The whole boundary is pending, even when its internal work could be separated. | SSZ-1, VAL-5, STOR-2 |
+
+A counterexample can therefore be a successfully checked Lean result while its correspondence
+status is still `divergence`. Likewise, `pending-external` does not replace a technical status;
+it only records that the boundary is not current implementation work.
+
 ## Why both are represented in Lean
 
 The two Lean representations serve different proof obligations:

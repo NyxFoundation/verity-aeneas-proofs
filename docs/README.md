@@ -14,7 +14,7 @@ Start with the repository [README](../README.md) for the proof architecture and 
 ## Recommended reading order
 
 1. [Public proposition inventory](inventory/public-propositions.md) — every audited public Lean theorem, grouped into correspondence and Verity-specific propositions.
-2. [Correspondence survey](inventory/correspondence-survey.md) — the complete Verity/formal-leanSpec boundary ledger, including blocked, divergent, and no-counterpart items.
+2. [Correspondence survey](inventory/correspondence-survey.md) — the complete Verity/formal-leanSpec boundary ledger, including blocked, divergent, no-counterpart, and `pending-external` items.
 3. The relevant [domain evidence](#domain-evidence) report — detailed source observations, extraction experiments, counterexamples, and trust boundaries.
 4. [Reproduction and maintenance](operations/reproduction.md) — regenerate and verify the checked-in artifacts.
 
@@ -23,7 +23,7 @@ Start with the repository [README](../README.md) for the proof architecture and 
 | Document | Responsibility | Update when |
 |---|---|---|
 | [Public proposition inventory](inventory/public-propositions.md) | Source of truth for the semantic grouping of every theorem audited by `proofs/AxiomAudit.lean` | A public theorem is added, removed, renamed, or reclassified |
-| [Correspondence survey](inventory/correspondence-survey.md) | Source of truth for catalog-wide correspondence classifications and extraction boundaries | A formal proposition, Verity counterpart, extraction result, or final classification changes |
+| [Correspondence survey](inventory/correspondence-survey.md) | Source of truth for catalog-wide correspondence classifications, extraction boundaries, and the external-dependency work-priority overlay | A formal proposition, Verity counterpart, extraction result, final classification, or work-priority decision changes |
 
 ## Domain evidence
 

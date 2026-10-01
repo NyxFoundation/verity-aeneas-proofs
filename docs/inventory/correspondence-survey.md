@@ -20,9 +20,11 @@ side so a proof author can start from the row.
 
 **Status.** Final correspondence ledger. Every domain row has exactly one final status, all
 34 theorem propositions are accounted for, and each checked result names its Lean evidence.
-No production Rust, pinned upstream source, or generated artifact was changed. Aeneas remains
-a verification aid: the architecture's proof route is still formal-leanSpec compiled through
-Lean's C backend ([architecture](https://github.com/NyxFoundation/verity/blob/develop/docs/src/reference/architecture.md)).
+The technical statuses are preserved independently of the `pending-external` work-priority
+overlay below. No production Rust, pinned upstream source, or generated artifact was changed.
+Aeneas remains a verification aid: the architecture's proof route is still formal-leanSpec
+compiled through Lean's C backend
+([architecture](https://github.com/NyxFoundation/verity/blob/develop/docs/src/reference/architecture.md)).
 
 **Fixed correspondence inputs.** Verity `a9f3365`; formal-leanSpec `ba72845`; Aeneas
 `nightly-2026.09.03-6852e64`. The historical inventory below was measured at Verity `develop`
@@ -282,11 +284,43 @@ mixed tracing/dynamic-trait failures, so checked results use the source-faithful
 | `canTransitionTo` (4 rules), `transitionTo`, `transition_sound` (SYNC-1) | `SyncMachine::observe(head_slot, network_finalized)` | not run; a `match` on `(Option<SyncState>, bool)` with `tracing` inside | Verity takes three of the four Lean transitions (`idle→syncing`, `syncing→synced`, `synced→syncing`) and never returns to `idle`, but method results include active-state stutters. | **partial** — `Sync.observe_stutter_or_transition` proves the strongest valid refinement and `observe_initial_ne_synced` excludes the forbidden shortcut. `syncing_stutter_counterexample` and `synced_stutter_counterexample` refute unconditional `transition_sound` because formal `canTransitionTo` has no active self-edge. |
 | `acceptsGossip`, `accepts_gossip_iff` (SYNC-2) | network bridge forwarding behavior | absent | **Verity does not gate gossip on the sync state.** `verity_node::network` forwards every `NetworkEvent::Gossip`; the `synced` watch gates validator duties instead. | **divergence** — `Sync.gossipGate_idle_counterexample` checks the idle witness: Verity's source-faithful model attempts forwarding while formal-leanSpec rejects gossip. Queue saturation is state-independent and does not restore equivalence. |
 
+## Work-priority overlay
+
+`pending-external` means that completing the whole boundary requires changing a third-party
+crate or independently verifying a third-party implementation or service contract. It is a
+scheduling decision, not a correspondence result: the existing **proved**, **partial**,
+**blocked**, **divergence**, and **no-counterpart** statuses remain the technical source of
+truth. If a boundary mixes internal work with an external obligation, the whole boundary is
+pending rather than splitting out its internal subset.
+
+Changes confined to Verity, formal-leanSpec, Charon, or Aeneas do not qualify for this overlay.
+Those extraction, modeling, and specification tasks remain active even though they occur
+outside this repository. The rule applies to every surveyed boundary, not only the 34 catalog
+propositions.
+
+| Pending boundary | Catalog IDs | External prerequisite | Scope note |
+|---|---|---|---|
+| Primitive SSZ codecs, `SszVector`, and power-of-two merkleization | SSZ-1, SSZ-3, SSZ-5, SSZ-6 | Verified contracts for pinned `libssz`, `libssz_types`, and `libssz_merkle` behavior | The complete catalog rows are pending; SSZ-2 range and SSZ-4 byte length remain active/proved because they do not require those contracts. |
+| Hash-tree-root collision resistance | SSZ-7 (`[axiom]`) | Independent verification of the external hash implementation and its cryptographic assumption | Only strengthening beyond delegation is pending; the existing `hashTreeRoot_forwards` theorem remains proved. |
+| Justified-slot bitlist operations | — | Stable verified contracts for `SszBitlist.get`, `len`, `push`, and `clone` | Both `JustifiedSlots.isSlotJustified` and `JustifiedSlots.extendToSlot` are pending in full. |
+| SSZ-backed container families | — | Verified `SszBitlist`, `SszList`, bounded-byte-list, and signature representation contracts | The `Attestation`/`AggregatedAttestation`, `SingleMessageAggregate`/`MultiMessageAggregate`, `Block` family, and `State` rows are pending in full. `AttestationData` remains active because its stated boundary does not require those contracts. |
+| Genesis and state-transition boundaries that consume pending containers or hashing | ST-2, ST-3, ST-4, ST-5, ST-6, ST-7 | The container and hash prerequisites above | `State.generateGenesis`, `processBlockHeader`, `processAttestations`, `processBlock`/`State.transition`, the four invariant transports, and `HistoryAlignment` are pending in full. ST-1 remains active because its recorded obligations are extraction, clone modeling, and termination rather than an external contract. |
+| Composite fork-choice transitions | FC-7, FC-8 | Completion of the pending state-transition boundary | The `onBlock`/`applyBlock` and history-alignment rows are pending in full. FC-1 through FC-6 remain active extraction/modeling work. |
+| End-to-end validator key loading | VAL-2 | Independently verified decoding and external cryptographic-key contracts | The already-proved pure distinct-role-key gate remains valid evidence, but the complete loader boundary is pending. |
+| Key preparation and signatures | VAL-5 | Independently verified contracts for pinned leanSig preparation, signing, and verification methods | VAL-5 and the uncatalogued `sign`/`verify` boundary are pending in full. |
+| Atomic storage backend | STOR-2 | Stable verified RocksDB atomic-write contract | All of STOR-2 is pending, including its in-memory subset, under the whole-boundary rule. The separate `Database.get?`/`put` row remains active. |
+
+NET-1 and NET-2 remain active: their recorded blockers are extraction, repository iterator
+cardinality, and a Verity/formal-leanSpec formula mismatch, not a required third-party contract.
+Likewise, Aeneas/Charon crashes or missing features alone never make a row
+`pending-external`.
+
 ## Catalog proposition accounting
 
 The objective's 34 propositions are the catalog's 34 `[x]` theorem entries. Each has exactly
 one implementation-correspondence status below. The additional `[axiom]` entry SSZ-7 is
-accounted for separately after the table; it is not one of the 34 proved catalog entries.
+accounted for separately after the table; it is not one of the 34 proved catalog entries. Work
+priority is given by the overlay above and does not replace these statuses.
 
 | ID | Final status | Evidence or exact boundary |
 |---|---|---|
@@ -368,9 +402,10 @@ Rust and the Lean say different things, which is what a correspondence table exi
   `Iterator` signature failure prevents generated Store/backend bodies; finite-map and external
   RocksDB contracts remain semantic prerequisites even after that tool failure is fixed.
 - **The remaining trust boundaries are explicit.** Source-faithful pure models are identified
-  as models rather than generated functions, leanSig/libssz/RocksDB operations need stable
-  external contracts, and the only nonstandard axiom in a checked implementation theorem is
-  Aeneas's external SHA-256 hash operation used by delegation—not collision resistance.
+  as models rather than generated functions, and work requiring verified
+  leanSig/libssz/RocksDB or external-hash contracts is marked `pending-external`. The only
+  nonstandard axiom in a checked implementation theorem is Aeneas's external SHA-256 hash
+  operation used by delegation—not collision resistance.
 - **Nothing here changes the architecture.** formal-leanSpec remains the executable formal
   specification; these proofs measure and narrow the implementation correspondence boundary.
 
