@@ -18,6 +18,15 @@ State transition, full fork choice/storage, async networking, and external crypt
 
 The same Lean implementation semantics can also support Verity-specific proofs without a formal-leanSpec counterpart. Checked examples include extracted configuration arithmetic and pure-model properties for key-role separation, duplicate-vote prevention within its non-overflowing domain, response-code ranges, and initial sync behavior.
 
+## Why both are represented in Lean
+
+The two Lean representations serve different proof obligations:
+
+- **leanSpec → formal-leanSpec: prove the protocol specification itself.** The purpose is to state the intended protocol behavior mathematically, prove safety properties and cross-cutting invariants, and expose ambiguity, inconsistency, or missing preconditions in the executable reference specification. The formal model defines the standard against which clients can be assessed.
+- **Verity → Lean implementation semantics: prove claims about the actual client.** The purpose is to show where the Rust implementation satisfies or refines the formal protocol model, prove Verity-specific contracts and safety properties, and make implementation divergences and external trust boundaries explicit.
+
+These are not two ways to generate the same Lean program: the first establishes what should be true of the protocol, while the second establishes what is true of Verity and connects it to that standard.
+
 ## Proof architecture
 
 ```mermaid
