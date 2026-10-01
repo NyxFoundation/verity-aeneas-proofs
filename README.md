@@ -18,6 +18,71 @@ State transition, full fork choice/storage, async networking, and external crypt
 
 The same Lean implementation semantics can also support Verity-specific proofs without a formal-leanSpec counterpart. Checked examples include extracted configuration arithmetic and pure-model properties for key-role separation, duplicate-vote prevention within its non-overflowing domain, response-code ranges, and initial sync behavior.
 
+## Proposition status taxonomy
+
+Each surveyed boundary has one technical correspondence status and one independent work-priority
+classification. Child nodes explain why a status applies; examples are representative rather
+than exhaustive. The authoritative per-boundary assignments are in the
+[correspondence survey](docs/inventory/correspondence-survey.md).
+
+```mermaid
+flowchart TB
+    ROOT["Surveyed proposition or boundary"]
+    ROOT --> TECH["Technical correspondence status"]
+    ROOT --> PRIORITY["Work priority"]
+
+    TECH --> PROVED["proved"]
+    PROVED --> PROVED_EXACT["Exact equality or transport<br/>CONT-1, CONT-2, VAL-1, VAL-3"]
+
+    TECH --> PARTIAL["partial"]
+    PARTIAL --> PARTIAL_DOMAIN["Restricted domain or precondition<br/>justifiedIndexAfter, slot-clock overflow"]
+    PARTIAL --> PARTIAL_WEAK["Weaker valid relation<br/>SYNC-1 stuttering refinement"]
+    PARTIAL --> PARTIAL_BOUNDARY["Supporting boundary only<br/>VAL-2 key gate"]
+
+    TECH --> BLOCKED["blocked"]
+    BLOCKED --> BLOCKED_EXTRACTION["Extraction or tool limitation<br/>ST-1, FC-1"]
+    BLOCKED --> BLOCKED_MODEL["Missing representation or semantic model<br/>Store finite-map relation"]
+    BLOCKED --> BLOCKED_DEP["Blocked by another correspondence<br/>FC-7 depends on state transition"]
+    BLOCKED --> BLOCKED_EXTERNAL["Unverified external contract<br/>VAL-5, STOR-2"]
+
+    TECH --> DIVERGENCE["divergence"]
+    DIVERGENCE --> DIV_SEMANTIC["Different rules<br/>SYNC-2, duty gate, vote precedence"]
+    DIVERGENCE --> DIV_WIDTH["Finite-width boundary<br/>VAL-4 at u64::MAX"]
+    DIVERGENCE --> DIV_FORMULA["Different formula or schema<br/>NET-2 compressed bound"]
+
+    TECH --> NONE["no-counterpart"]
+    NONE --> NONE_EXTERNAL["Delegated outside Verity<br/>SSZ-1, SSZ-5, SSZ-6"]
+    NONE --> NONE_FORMAL["Formal proof-only concept<br/>AnchorWF, Reachable"]
+    NONE --> NONE_BUILTIN["No named Rust operation<br/>Root.lexLe uses array Ord"]
+    NONE --> NONE_ABSENT["Feature absent or materially different<br/>Store.prune"]
+    NONE --> NONE_VERITY["Verity-only behavior<br/>timeline and database writers"]
+
+    PRIORITY --> ACTIVE["active<br/>No third-party change or independent contract verification required"]
+    PRIORITY --> PENDING["pending-external<br/>Third-party change or independent verification required"]
+    PENDING --> PENDING_INHERIT["Whole boundary inherits pending<br/>even when internal work is separable"]
+
+    classDef root fill:#f3f4f6,stroke:#374151,color:#111827
+    classDef status fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e
+    classDef success fill:#dcfce7,stroke:#15803d,color:#14532d
+    classDef caution fill:#fef3c7,stroke:#b45309,color:#78350f
+    classDef failure fill:#fee2e2,stroke:#b91c1c,color:#7f1d1d
+    classDef neutral fill:#f3e8ff,stroke:#7e22ce,color:#581c87
+
+    class ROOT root
+    class TECH,PRIORITY status
+    class PROVED,PROVED_EXACT success
+    class PARTIAL,PARTIAL_DOMAIN,PARTIAL_WEAK,PARTIAL_BOUNDARY caution
+    class BLOCKED,BLOCKED_EXTRACTION,BLOCKED_MODEL,BLOCKED_DEP,BLOCKED_EXTERNAL caution
+    class DIVERGENCE,DIV_SEMANTIC,DIV_WIDTH,DIV_FORMULA failure
+    class NONE,NONE_EXTERNAL,NONE_FORMAL,NONE_BUILTIN,NONE_ABSENT,NONE_VERITY neutral
+    class ACTIVE success
+    class PENDING,PENDING_INHERIT caution
+```
+
+A counterexample can therefore be a successfully checked Lean result while its correspondence
+status is still `divergence`. Likewise, `pending-external` does not replace a technical status;
+it only records that the boundary is not current implementation work.
+
 ## Why both are represented in Lean
 
 The two Lean representations serve different proof obligations:
