@@ -1,6 +1,6 @@
 # verity-aeneas-proofs
 
-Aeneas-generated Lean semantics for [Verity](https://github.com/NyxFoundation/verity), handwritten correspondence proofs against [formal-leanSpec](https://github.com/NyxFoundation/formal-leanSpec), and Verity-specific implementation properties.
+Aeneas-generated Lean semantics for [Verity](https://github.com/NyxFoundation/verity), handwritten correspondence proofs against [formal-leanSpec](https://github.com/NyxFoundation/formal-leanSpec)—the Lean formalization of the upstream [leanSpec](https://github.com/leanEthereum/leanSpec) executable protocol reference—and Verity-specific implementation properties.
 
 This repository owns verification artifacts, not production consensus code. It was initialized from Verity PRs [#49](https://github.com/NyxFoundation/verity/pull/49) and [#56](https://github.com/NyxFoundation/verity/pull/56).
 
@@ -18,55 +18,60 @@ State transition, full fork choice/storage, async networking, and external crypt
 
 The same Lean implementation semantics can also support Verity-specific proofs without a formal-leanSpec counterpart. Checked examples include extracted configuration arithmetic and pure-model properties for key-role separation, duplicate-vote prevention within its non-overflowing domain, response-code ranges, and initial sync behavior.
 
-## Proof architecture and current status
+## Proof architecture
 
 ```mermaid
 flowchart TB
-    V["Verity Rust implementation<br/>pinned source"]
-    C["Charon<br/>Rust to LLBC"]
-    A["Aeneas<br/>LLBC to Lean"]
-    G["Generated Lean semantics<br/>generated/"]
-    M["Source-faithful pure models<br/>selected blocked boundaries"]
+    subgraph SPECS["Protocol specification lineage"]
+        direction LR
+        LS["leanSpec<br/>executable protocol reference"]
+        FLS["formal-leanSpec<br/>Lean 4 protocol model<br/>and protocol theorems"]
+        LS -->|"formalization and alignment"| FLS
+    end
 
-    V --> C --> A --> G
-    V -. "explicit model path" .-> M
+    subgraph IMPL["Verity implementation semantics"]
+        direction LR
+        V["Verity Rust implementation<br/>pinned source"]
+        C["Charon<br/>Rust to LLBC"]
+        A["Aeneas<br/>LLBC to Lean"]
+        G["Generated Lean semantics<br/>generated/"]
+        M["Source-faithful pure models<br/>for explicit extraction boundaries"]
+        V --> C --> A --> G
+        V -. "explicit model path" .-> M
+    end
 
-    S["Track 1 input: formal-leanSpec<br/>executable specification<br/>and 34 catalog propositions"]
-    X["Specification correspondence<br/>equality, refinement, divergence,<br/>and explicit trust boundaries"]
-    VS["Track 2 input: Verity-specific specs<br/>local contracts, safety invariants,<br/>and behavior with no formal counterpart"]
-    L["Direct property proofs<br/>over generated semantics<br/>or an explicit pure model"]
+    B["Proof bridge<br/>representation relations,<br/>conversions, and external contracts"]
+    G --> B
+    M --> B
 
-    S --> X
-    G --> X
-    M --> X
-    VS --> L
-    G --> L
-    M --> L
+    subgraph TRACKS["Two proof tracks"]
+        direction LR
+        T1["1. Protocol correspondence<br/>Verity and formal-leanSpec<br/>equality, refinement, or divergence"]
+        T2["2. Verity-specific properties<br/>local contracts, safety invariants,<br/>and boundary behavior"]
+    end
 
-    Q["Lean theorems and counterexamples<br/>lake build and axiom audit"]
-    X --> Q
-    L --> Q
+    FLS --> T1
+    B --> T1
+    VS["Verity-specific specifications<br/>derived from architecture<br/>and component contracts"] --> T2
+    B --> T2
 
-    Q --> CROSS["Correspondence checked now<br/>SSZ, checkpoints, justification,<br/>proposer, and selected fork-choice,<br/>network, validator, and sync behavior"]
-    Q --> LOCAL["Verity-local properties checked now<br/>config arithmetic; response-code ranges;<br/>key-role, duplicate-vote, and<br/>initial-sync guards"]
-    Q --> DIV["Cross-spec differences found<br/>vote strictness, compressed bounds,<br/>validator edge cases, and sync/gossip"]
-    X --> OPEN["Open or blocked on either track<br/>state transition, full fork choice/storage,<br/>async networking, and external crypto"]
-    L --> OPEN
+    T1 --> Q["Lean kernel verification<br/>lake build and axiom audit"]
+    T2 --> Q
 
-    classDef source fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e
-    classDef proof fill:#ede9fe,stroke:#7e22ce,color:#581c87
-    classDef proved fill:#dcfce7,stroke:#15803d,color:#14532d
-    classDef partial fill:#fef3c7,stroke:#b45309,color:#78350f
-    classDef divergence fill:#fee2e2,stroke:#b91c1c,color:#7f1d1d
+    classDef reference fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e
+    classDef implementation fill:#ecfeff,stroke:#0e7490,color:#164e63
+    classDef bridge fill:#f3e8ff,stroke:#7e22ce,color:#581c87
+    classDef track fill:#dcfce7,stroke:#15803d,color:#14532d
+    classDef check fill:#f3f4f6,stroke:#4b5563,color:#1f2937
 
-    class V,C,A,G,M,S source
-    class X,VS,L,Q proof
-    class CROSS,LOCAL proved
-    class OPEN partial
-    class DIV divergence
+    class LS,FLS reference
+    class V,C,A,G,M implementation
+    class B,VS bridge
+    class T1,T2 track
+    class Q check
 ```
 
-The solid implementation path is the checked-in Charon/Aeneas translation. The dotted implementation path is used only for explicitly identified source-faithful models when extraction cannot expose a usable function. Track 1 compares Verity with formal-leanSpec; Track 2 states and proves properties owned by Verity itself, including behavior with no formal counterpart. A local model theorem is not automatically an extracted-function theorem, and neither track currently establishes whole-client correctness.
+`leanSpec` is the executable protocol reference; `formal-leanSpec` expresses that protocol as Lean definitions and theorems. Their alignment is an upstream specification obligation, while Track 1 relates Verity's implementation semantics to the formal model. Track 2 proves contracts and invariants owned by Verity even when no protocol-level counterpart exists. The solid implementation path is the checked-in Charon/Aeneas translation; the dotted path denotes an explicit source-faithful model rather than an extracted function.
 
 ## Repository layout
 
