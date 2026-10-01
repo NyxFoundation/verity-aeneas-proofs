@@ -1,6 +1,6 @@
 ---
 title: Aeneas Correspondence Survey
-last_updated: 2026-09-29
+last_updated: 2026-10-01
 tags:
   - verification
   - aeneas
@@ -9,6 +9,8 @@ tags:
 ---
 
 # Aeneas Correspondence Survey
+
+> **Document role:** Authoritative catalog-wide ledger of Verity/formal-leanSpec correspondence and extraction boundaries. See the [documentation index](../README.md), the [public proposition inventory](public-propositions.md) for existing audited theorems, and the domain evidence reports for detailed experiments.
 
 Which Verity items can be put in correspondence with a formal-leanSpec definition or
 proposition, and which of those the Charon → Aeneas pipeline turns into Lean today. This is a
@@ -48,7 +50,7 @@ Three inputs, combined by hand:
 3. **The Lean inventory**: every definition and theorem of formal-leanSpec's 41 files, with the
    catalog ID each theorem discharges.
 
-A refusal is classified as described in [the reproduction guide](reproduction.md): a tool
+A refusal is classified as described in [the reproduction guide](../operations/reproduction.md): a tool
 limitation is recorded and the implementation left alone; only a Verity defect would be fixed.
 Every refusal in this survey is a tool limitation.
 

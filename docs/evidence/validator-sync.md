@@ -1,6 +1,6 @@
 ---
 title: Validator and Sync Correspondence
-last_updated: 2026-09-29
+last_updated: 2026-10-01
 tags:
   - correspondence
   - lean
@@ -9,6 +9,8 @@ tags:
 ---
 
 # Validator and Sync Correspondence
+
+> **Document role:** Domain evidence for validator and sync entries in the [public proposition inventory](../inventory/public-propositions.md) and [correspondence survey](../inventory/correspondence-survey.md). The inventories remain authoritative; this report records model scope, divergences, extraction blockers, and unblocking actions.
 
 ## Fixed inputs
 

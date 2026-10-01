@@ -1,6 +1,6 @@
 ---
-title: CONT, VAL, and Configuration Correspondence
-last_updated: 2026-09-29
+title: Containers, Proposer, and Configuration Evidence
+last_updated: 2026-10-01
 tags:
   - correspondence
   - formal-leanspec
@@ -8,7 +8,9 @@ tags:
   - verification
 ---
 
-# CONT, VAL, and Configuration Correspondence
+# Containers, Proposer, and Configuration Evidence
+
+> **Document role:** Domain evidence for the corresponding entries in the [public proposition inventory](../inventory/public-propositions.md) and [correspondence survey](../inventory/correspondence-survey.md). The inventories, not this report, define the cross-domain theorem list and final classifications.
 
 ## Pinned scope
 
@@ -60,4 +62,4 @@ The proofs compare the checked-in `VerityChain` Aeneas extraction of Verity
 ## Files
 
 - `proofs/VerityChain/Correspondence.lean`
-- `docs/correspondence-cont-val-config.md`
+- `docs/evidence/containers-proposer-config.md`

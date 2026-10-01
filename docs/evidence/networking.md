@@ -1,6 +1,6 @@
 ---
 title: Networking Correspondence Evidence
-last_updated: 2026-09-29
+last_updated: 2026-10-01
 tags:
   - aeneas
   - correspondence
@@ -9,6 +9,8 @@ tags:
 ---
 
 # Networking Correspondence Evidence
+
+> **Document role:** Domain evidence for networking entries in the [public proposition inventory](../inventory/public-propositions.md) and [correspondence survey](../inventory/correspondence-survey.md). The inventories remain authoritative; this report records source observations, model boundaries, and extraction reproduction.
 
 ## Scope and fixed inputs
 
