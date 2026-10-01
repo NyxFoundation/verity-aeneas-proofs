@@ -25,58 +25,66 @@ classification. Child nodes explain why a status applies; examples are represent
 than exhaustive. The authoritative per-boundary assignments are in the
 [correspondence survey](docs/inventory/correspondence-survey.md).
 
+### Technical correspondence status
+
 ```mermaid
-flowchart TB
-    ROOT["Surveyed proposition or boundary"]
-    ROOT --> TECH["Technical correspondence status"]
-    ROOT --> PRIORITY["Work priority"]
+mindmap
+  root((Technical status))
+    proved
+      Exact equality or transport
+        CONT-1 / CONT-2 / VAL-1 / VAL-3
+    partial
+      Restricted domain or precondition
+        justifiedIndexAfter / slot-clock overflow
+      Weaker valid relation
+        SYNC-1 stuttering refinement
+      Supporting boundary only
+        VAL-2 key gate
+    blocked
+      Extraction or tool limitation
+        ST-1 / FC-1
+      Missing representation or semantic model
+        Store finite-map relation
+      Blocked by another correspondence
+        FC-7 depends on state transition
+      Unverified external contract
+        VAL-5 / STOR-2
+    divergence
+      Different rules
+        SYNC-2 / duty gate / vote precedence
+      Finite-width boundary
+        VAL-4 at u64::MAX
+      Different formula or schema
+        NET-2 compressed bound
+    no-counterpart
+      Delegated outside Verity
+        SSZ-1 / SSZ-5 / SSZ-6
+      Formal proof-only concept
+        AnchorWF / Reachable
+      No named Rust operation
+        Root.lexLe uses array Ord
+      Feature absent or materially different
+        Store.prune
+      Verity-only behavior
+        Timeline / database writers
+```
 
-    TECH --> PROVED["proved"]
-    PROVED --> PROVED_EXACT["Exact equality or transport<br/>CONT-1, CONT-2, VAL-1, VAL-3"]
+### Work priority
 
-    TECH --> PARTIAL["partial"]
-    PARTIAL --> PARTIAL_DOMAIN["Restricted domain or precondition<br/>justifiedIndexAfter, slot-clock overflow"]
-    PARTIAL --> PARTIAL_WEAK["Weaker valid relation<br/>SYNC-1 stuttering refinement"]
-    PARTIAL --> PARTIAL_BOUNDARY["Supporting boundary only<br/>VAL-2 key gate"]
-
-    TECH --> BLOCKED["blocked"]
-    BLOCKED --> BLOCKED_EXTRACTION["Extraction or tool limitation<br/>ST-1, FC-1"]
-    BLOCKED --> BLOCKED_MODEL["Missing representation or semantic model<br/>Store finite-map relation"]
-    BLOCKED --> BLOCKED_DEP["Blocked by another correspondence<br/>FC-7 depends on state transition"]
-    BLOCKED --> BLOCKED_EXTERNAL["Unverified external contract<br/>VAL-5, STOR-2"]
-
-    TECH --> DIVERGENCE["divergence"]
-    DIVERGENCE --> DIV_SEMANTIC["Different rules<br/>SYNC-2, duty gate, vote precedence"]
-    DIVERGENCE --> DIV_WIDTH["Finite-width boundary<br/>VAL-4 at u64::MAX"]
-    DIVERGENCE --> DIV_FORMULA["Different formula or schema<br/>NET-2 compressed bound"]
-
-    TECH --> NONE["no-counterpart"]
-    NONE --> NONE_EXTERNAL["Delegated outside Verity<br/>SSZ-1, SSZ-5, SSZ-6"]
-    NONE --> NONE_FORMAL["Formal proof-only concept<br/>AnchorWF, Reachable"]
-    NONE --> NONE_BUILTIN["No named Rust operation<br/>Root.lexLe uses array Ord"]
-    NONE --> NONE_ABSENT["Feature absent or materially different<br/>Store.prune"]
-    NONE --> NONE_VERITY["Verity-only behavior<br/>timeline and database writers"]
-
-    PRIORITY --> ACTIVE["active<br/>No third-party change or independent contract verification required"]
-    PRIORITY --> PENDING["pending-external<br/>Third-party change or independent verification required"]
-    PENDING --> PENDING_INHERIT["Whole boundary inherits pending<br/>even when internal work is separable"]
-
-    classDef root fill:#f3f4f6,stroke:#374151,color:#111827
-    classDef status fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e
-    classDef success fill:#dcfce7,stroke:#15803d,color:#14532d
-    classDef caution fill:#fef3c7,stroke:#b45309,color:#78350f
-    classDef failure fill:#fee2e2,stroke:#b91c1c,color:#7f1d1d
-    classDef neutral fill:#f3e8ff,stroke:#7e22ce,color:#581c87
-
-    class ROOT root
-    class TECH,PRIORITY status
-    class PROVED,PROVED_EXACT success
-    class PARTIAL,PARTIAL_DOMAIN,PARTIAL_WEAK,PARTIAL_BOUNDARY caution
-    class BLOCKED,BLOCKED_EXTRACTION,BLOCKED_MODEL,BLOCKED_DEP,BLOCKED_EXTERNAL caution
-    class DIVERGENCE,DIV_SEMANTIC,DIV_WIDTH,DIV_FORMULA failure
-    class NONE,NONE_EXTERNAL,NONE_FORMAL,NONE_BUILTIN,NONE_ABSENT,NONE_VERITY neutral
-    class ACTIVE success
-    class PENDING,PENDING_INHERIT caution
+```mermaid
+mindmap
+  root((Work priority))
+    active
+      No third-party change required
+      No independent external contract verification required
+      Examples
+        ST-1 / FC-1 / NET-1 / NET-2
+    pending-external
+      Third-party change or independent verification required
+      Whole boundary inherits pending
+        Even when internal work is separable
+      Examples
+        SSZ-1 / VAL-5 / STOR-2
 ```
 
 A counterexample can therefore be a successfully checked Lean result while its correspondence
