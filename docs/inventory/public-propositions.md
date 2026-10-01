@@ -11,6 +11,8 @@ tags:
 
 # Public Proposition Inventory
 
+> **Document role:** Authoritative inventory of the current public Lean theorem set. See the [documentation index](../README.md) for reading order and the [correspondence survey](correspondence-survey.md) for catalog-wide classifications, including obligations without public implementation theorems.
+
 This inventory groups every public theorem audited by `proofs/AxiomAudit.lean` into a semantic proposition. It covers the theorems that exist in this repository; it does not list blocked or planned obligations from the wider 34-proposition formal-leanSpec catalog.
 
 The grouping is intentionally not one theorem per formal-leanSpec proposition. A semantic proposition may need several conversion, implementation-characterization, refinement, and boundary theorems. Conversely, one Verity function may support more than one formal proposition.

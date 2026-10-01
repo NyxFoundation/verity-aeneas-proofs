@@ -1,6 +1,6 @@
 ---
 title: Fork Choice and Storage Correspondence
-last_updated: 2026-09-29
+last_updated: 2026-10-01
 tags:
   - verification
   - aeneas
@@ -9,6 +9,8 @@ tags:
 ---
 
 # Fork Choice and Storage Correspondence
+
+> **Document role:** Domain evidence for fork-choice and storage entries in the [public proposition inventory](../inventory/public-propositions.md) and [correspondence survey](../inventory/correspondence-survey.md). The inventories remain authoritative; this report preserves detailed extraction diagnostics and reproduction commands.
 
 ## Fixed inputs
 

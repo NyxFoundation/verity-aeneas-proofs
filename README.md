@@ -14,7 +14,7 @@ The correspondence ledger classifies every surveyed Verity/formal-leanSpec bound
 - response codes, varint size, networking constants, and compressed-bound counterexamples;
 - validator safety gates and sync-state refinement, with checked boundary divergences.
 
-State transition, full fork choice/storage, async networking, and external crypto remain limited by the concrete extraction or contract boundaries recorded in [`docs/correspondence-survey.md`](docs/correspondence-survey.md). These results do not prove the whole client or protocol safety.
+State transition, full fork choice/storage, async networking, and external crypto remain limited by the concrete extraction or contract boundaries recorded in the [correspondence survey](docs/inventory/correspondence-survey.md). These results do not prove the whole client or protocol safety.
 
 The same Lean implementation semantics can also support Verity-specific proofs without a formal-leanSpec counterpart. Checked examples include extracted configuration arithmetic and pure-model properties for key-role separation, duplicate-vote prevention within its non-overflowing domain, response-code ranges, and initial sync behavior.
 
@@ -89,7 +89,7 @@ The 75 audited public Lean theorems are grouped by semantic obligation rather th
 - **Correspondence propositions:** representation and SSZ bridges; justification, proposer, checkpoint, slot-clock, and configuration correspondence; error refinement; fork-choice relations; validator and sync differences; response-code, varint, networking-constant, and compressed-bound correspondence.
 - **Verity-specific propositions:** finite-width arithmetic bridges; exact extracted branch behavior; configuration consistency and hash delegation; key-separation and duplicate-vote gates; sync initialization; and response-byte classification.
 
-See the [public proposition inventory](docs/proposition-inventory.md) for each grouped proposition, its formal or Verity obligation, whether it targets Aeneas output or an explicit pure model, and all supporting public theorem names.
+See the [public proposition inventory](docs/inventory/public-propositions.md) for each grouped proposition, its formal or Verity obligation, whether it targets Aeneas output or an explicit pure model, and all supporting public theorem names.
 
 ## Repository layout
 
@@ -98,7 +98,7 @@ See the [public proposition inventory](docs/proposition-inventory.md) for each g
 | `generated/` | Charon/Aeneas output; never edit manually |
 | `proofs/` | Handwritten external models, correspondence theorems, and Verity-specific properties |
 | `lean/` | Symlinked Lean module tree consumed by Lake |
-| `docs/` | Extractability survey and reproduction notes |
+| `docs/` | Indexed inventories, domain evidence, and operations guides |
 | `scripts/` | Pinned source checkout, regeneration, integrity checks, and manual verification |
 | `sources.lock` | Exact source, specification, and tool revisions |
 
@@ -118,7 +118,7 @@ git diff --exit-code -- generated artifacts.sha256
 
 GitHub Actions intentionally runs only the lightweight artifact-integrity check. Lean and Aeneas execution remains an explicit local operation because of its resource cost.
 
-See [Reproduction and maintenance](docs/reproduction.md) for the update procedure and [the correspondence survey](docs/correspondence-survey.md) for the wider proof inventory.
+See the [documentation index](docs/README.md) for the recommended reading order, [Reproduction and maintenance](docs/operations/reproduction.md) for the update procedure, and the [correspondence survey](docs/inventory/correspondence-survey.md) for the wider proof inventory.
 
 ## License
 

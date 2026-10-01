@@ -1,6 +1,6 @@
 ---
 title: Reproduction and Maintenance
-last_updated: 2026-09-29
+last_updated: 2026-10-01
 tags:
   - aeneas
   - reproducibility
@@ -8,6 +8,8 @@ tags:
 ---
 
 # Reproduction and Maintenance
+
+> **Document role:** Operational source of truth for routine bootstrap, regeneration, verification, and pinned-input updates. See the [documentation index](../README.md) for inventories and domain evidence.
 
 ## Pinned inputs
 
@@ -75,4 +77,4 @@ An extraction or proof failure is not automatically a Verity defect. Classify it
 
 ## Full survey
 
-The 51-module survey in `correspondence-survey.md` is not part of routine regeneration. Some targets exceed GitHub-hosted runner memory: Charon exceeded 55 GB resident memory on derived SSZ decoding, and individual Aeneas runs can exceed 12 GB. Re-run those measurements manually with the memory caps documented in the survey.
+The 51-module survey in [`inventory/correspondence-survey.md`](../inventory/correspondence-survey.md) is not part of routine regeneration. Some targets exceed GitHub-hosted runner memory: Charon exceeded 55 GB resident memory on derived SSZ decoding, and individual Aeneas runs can exceed 12 GB. Re-run those measurements manually with the memory caps documented in the survey.

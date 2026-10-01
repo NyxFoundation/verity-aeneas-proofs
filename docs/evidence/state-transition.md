@@ -1,6 +1,6 @@
 ---
-title: State-transition correspondence status
-last_updated: 2026-09-29
+title: State Transition Evidence
+last_updated: 2026-10-01
 tags:
   - aeneas
   - correspondence
@@ -8,7 +8,9 @@ tags:
   - state-transition
 ---
 
-# State-transition correspondence status
+# State Transition Evidence
+
+> **Document role:** Domain evidence for state-transition and history-alignment entries in the [correspondence survey](../inventory/correspondence-survey.md). The survey is the authoritative classification ledger; this report preserves the supporting extraction experiments and exact blockers.
 
 ## Scope and pinned inputs
 
