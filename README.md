@@ -2,7 +2,63 @@
 
 Aeneas-generated Lean semantics for [Verity](https://github.com/NyxFoundation/verity), handwritten correspondence proofs against [formal-leanSpec](https://github.com/NyxFoundation/formal-leanSpec)—the Lean formalization of the upstream [leanSpec](https://github.com/leanEthereum/leanSpec) executable protocol reference—and Verity-specific implementation properties.
 
-This repository owns verification artifacts, not production consensus code. It was initialized from Verity PRs [#49](https://github.com/NyxFoundation/verity/pull/49) and [#56](https://github.com/NyxFoundation/verity/pull/56).
+This repository owns verification artifacts, not production consensus code. 
+
+
+## Proof architecture
+
+```mermaid
+flowchart TB
+    subgraph SPECS["Protocol specification lineage"]
+        direction LR
+        LS["leanSpec<br/>executable protocol reference"]
+        FLS["formal-leanSpec<br/>Lean 4 protocol model<br/>and protocol theorems"]
+        LS -->|"formalization and alignment"| FLS
+    end
+
+    subgraph IMPL["Verity implementation semantics"]
+        direction LR
+        V["Verity Rust implementation<br/>pinned source"]
+        C["Charon<br/>Rust to LLBC"]
+        A["Aeneas<br/>LLBC to Lean"]
+        G["Generated Lean semantics<br/>generated/"]
+        M["Source-faithful pure models<br/>for explicit extraction boundaries"]
+        V --> C --> A --> G
+        V -. "explicit model path" .-> M
+    end
+
+    B["Proof bridge<br/>representation relations,<br/>conversions, and external contracts"]
+    G --> B
+    M --> B
+
+    subgraph TRACKS["Two proof tracks"]
+        direction LR
+        T1["1. Protocol correspondence<br/>Verity and formal-leanSpec<br/>equality, refinement, or divergence"]
+        T2["2. Verity-specific properties<br/>local contracts, safety invariants,<br/>and boundary behavior"]
+    end
+
+    FLS --> T1
+    B --> T1
+    VS["Verity-specific specifications<br/>derived from architecture<br/>and component contracts"] --> T2
+    B --> T2
+
+    T1 --> Q["Lean kernel verification<br/>lake build and axiom audit"]
+    T2 --> Q
+
+    classDef reference fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e
+    classDef implementation fill:#ecfeff,stroke:#0e7490,color:#164e63
+    classDef bridge fill:#f3e8ff,stroke:#7e22ce,color:#581c87
+    classDef track fill:#dcfce7,stroke:#15803d,color:#14532d
+    classDef check fill:#f3f4f6,stroke:#4b5563,color:#1f2937
+
+    class LS,FLS reference
+    class V,C,A,G,M implementation
+    class B,VS bridge
+    class T1,T2 track
+    class Q check
+```
+
+`leanSpec` is the executable protocol reference; `formal-leanSpec` expresses that protocol as Lean definitions and theorems. Their alignment is an upstream specification obligation, while Track 1 relates Verity's implementation semantics to the formal model. Track 2 proves contracts and invariants owned by Verity even when no protocol-level counterpart exists. The solid implementation path is the checked-in Charon/Aeneas translation; the dotted path denotes an explicit source-faithful model rather than an extracted function.
 
 ## Current result
 
@@ -88,61 +144,6 @@ The two Lean representations serve different proof obligations:
 - **Verity → Lean implementation semantics: prove claims about the actual client.** The purpose is to show where the Rust implementation satisfies or refines the formal protocol model, prove Verity-specific contracts and safety properties, and make implementation divergences and external trust boundaries explicit.
 
 These are not two ways to generate the same Lean program: the first establishes what should be true of the protocol, while the second establishes what is true of Verity and connects it to that standard.
-
-## Proof architecture
-
-```mermaid
-flowchart TB
-    subgraph SPECS["Protocol specification lineage"]
-        direction LR
-        LS["leanSpec<br/>executable protocol reference"]
-        FLS["formal-leanSpec<br/>Lean 4 protocol model<br/>and protocol theorems"]
-        LS -->|"formalization and alignment"| FLS
-    end
-
-    subgraph IMPL["Verity implementation semantics"]
-        direction LR
-        V["Verity Rust implementation<br/>pinned source"]
-        C["Charon<br/>Rust to LLBC"]
-        A["Aeneas<br/>LLBC to Lean"]
-        G["Generated Lean semantics<br/>generated/"]
-        M["Source-faithful pure models<br/>for explicit extraction boundaries"]
-        V --> C --> A --> G
-        V -. "explicit model path" .-> M
-    end
-
-    B["Proof bridge<br/>representation relations,<br/>conversions, and external contracts"]
-    G --> B
-    M --> B
-
-    subgraph TRACKS["Two proof tracks"]
-        direction LR
-        T1["1. Protocol correspondence<br/>Verity and formal-leanSpec<br/>equality, refinement, or divergence"]
-        T2["2. Verity-specific properties<br/>local contracts, safety invariants,<br/>and boundary behavior"]
-    end
-
-    FLS --> T1
-    B --> T1
-    VS["Verity-specific specifications<br/>derived from architecture<br/>and component contracts"] --> T2
-    B --> T2
-
-    T1 --> Q["Lean kernel verification<br/>lake build and axiom audit"]
-    T2 --> Q
-
-    classDef reference fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e
-    classDef implementation fill:#ecfeff,stroke:#0e7490,color:#164e63
-    classDef bridge fill:#f3e8ff,stroke:#7e22ce,color:#581c87
-    classDef track fill:#dcfce7,stroke:#15803d,color:#14532d
-    classDef check fill:#f3f4f6,stroke:#4b5563,color:#1f2937
-
-    class LS,FLS reference
-    class V,C,A,G,M implementation
-    class B,VS bridge
-    class T1,T2 track
-    class Q check
-```
-
-`leanSpec` is the executable protocol reference; `formal-leanSpec` expresses that protocol as Lean definitions and theorems. Their alignment is an upstream specification obligation, while Track 1 relates Verity's implementation semantics to the formal model. Track 2 proves contracts and invariants owned by Verity even when no protocol-level counterpart exists. The solid implementation path is the checked-in Charon/Aeneas translation; the dotted path denotes an explicit source-faithful model rather than an extracted function.
 
 ## Proposition inventory
 
